@@ -1,0 +1,24 @@
+{
+  "name": "twhtml",
+  "version": "1.0.0",
+  "bundleDependencies": false,
+  "dependencies": {
+    "bootstrap": "^4.5.3",
+    "express": "^4.17.1",
+    "iconv-lite": "^0.4.24",
+    "minimist": "^1.2.5",
+    "socket.io": "^1.7.4"
+  },
+  "description": "HTML UI for Tradewars text game",
+  "main": "index.js",
+  "scripts": {
+    "build": "browserify index.js > myproject.min.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tradewars",
+    "tw2002"
+  ],
+  "author": "Steven Ruzicka",
+  "license": "ISC"
+}

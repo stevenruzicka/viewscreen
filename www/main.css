@@ -1,0 +1,70 @@
+body, div#page {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: #111111;
+  }
+  
+  div#viewscreen {
+    margin: 0px;
+    padding: 0px;
+    overflow-y: scroll;
+    overflow-x: scroll;
+    line-height: 15px;
+    border: 1px solid gray; 
+  }
+  @media screen and (max-device-width: 480px){
+    table.out{
+      -webkit-text-size-adjust: none;
+    }
+  }
+  @media screen and (min-width: 100px) {
+    table.out {
+        white-space:pre;
+        word-wrap: break-word;
+        font-family: monospace;
+        font-size: 8px;
+        color: rgb(148, 132, 132);
+    }
+  }
+  @media screen and (min-width: 700px) {
+    table.out {
+      font-size: 12px;
+    }
+    input#mobile-cmd {
+        display: none;
+    }    
+  }
+  
+  table.out tr {
+    display: block;
+  }
+  
+  div#viewscreen .tw-prompt {
+    display:none;
+  }
+  div#viewscreen .tw-prompt:last-of-type {
+    display: block;
+  }
+  
+  input#mobile-cmd {
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+  }
+  
+  input#mobile-cmd {
+    font-size: 9px;
+    padding: 5px;
+  }
+
+  table.out tr.blank-line {
+      line-height: 2px;
+  }
+  table.out tr.tw-line {
+      line-height: 1vh;
+  }
+  table.out tr.input-line {
+      display:none;
+  }
