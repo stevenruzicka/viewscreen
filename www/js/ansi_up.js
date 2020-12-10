@@ -107,6 +107,9 @@
 
     Ansi_Up.prototype.process = function (txt, options, markup) {
       var self = this;
+      if (txt == undefined) {
+        return "";
+      }
       var raw_text_chunks = txt.split(/\033\[/);
       var first_chunk = raw_text_chunks.shift(); // the first chunk is not the result of the split
 
@@ -275,9 +278,9 @@
           }
         }
         if (use_classes) {
-          return '<span class="' + classes.join(' ') + '"' + render_data.call(self, data) + '>' + orig_txt + '</span>';
+          return '<span class="' + classes.join(' ') + '"' + render_data.call(self, data) + '>' + this.escape_for_html(orig_txt) + '</span>';
         } else {
-          return '<span style="' + styles.join(';') + '"' + render_data.call(self, data) + '>' + orig_txt + '</span>';
+          return '<span style="' + styles.join(';') + '"' + render_data.call(self, data) + '>' + this.escape_for_html(orig_txt) + '</span>';
         }
       }
     };

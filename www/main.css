@@ -64,6 +64,7 @@ body, div#page {
   }
   table.out tr.tw-line {
       line-height: 1vh;
+      overflow: hidden;
   }
   table.out tr.input-line {
       display:none;

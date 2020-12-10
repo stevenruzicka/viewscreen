@@ -137,9 +137,10 @@ WebTelnetProxy.prototype = {
       //console.log('telnet: ', buf.toString());
       var peerSock = telnet.peerSock;
       if(peerSock) {
+        //console.log("["+ buf + "]");
+         
         if(proxy.charset && (proxy.charset !== 'utf8')) {
           buf = iconv.decode(buf, proxy.charset);
-          console.log(buf);
           buf = unicodeStringToTypedArray(buf);
         }
         var arrBuf = new ArrayBuffer(buf.length);
@@ -147,7 +148,7 @@ WebTelnetProxy.prototype = {
         for(var i=0; i<buf.length; ++i) {
           view[i] = buf[i];
         }
-        peerSock.emit('stream', arrBuf);
+        peerSock.emit('stream', buf);
       }
     });
     telnet.on('error', function(){

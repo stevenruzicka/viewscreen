@@ -1,4 +1,38 @@
 class Connection {
+
+  static ansi = [
+    "ù",
+    "þ",
+    "Ã",
+    "ü",
+    "ý",
+    "À",
+    "Ù",
+    "Ú",
+    "¿",
+    "³",
+    "Ø",
+    "¾",
+    "Õ",
+    "Å",
+    "Ý",
+    "ß",
+    "Þ",
+    "ú",
+    "Ü",
+    "Í",
+    "Ä",
+    "±",
+    "°",
+    "º",
+    "É",
+    "È",
+    "¼",
+    "»",
+    "Û",
+    "²"
+  ];
+
     constructor() {
         // websocket
         this.sock = io.connect();
@@ -18,10 +52,33 @@ class Connection {
         var flag = 0;
         for (pos = begin; pos < buf.length;){
           flag= buf[pos];
-          if ((flag >>>7) === 0 ) {
+          if ((flag >>>8) === 0 ) {
             str+= String.fromCharCode(buf[pos]);
             pos += 1;
       
+          }
+          else if ((flag &0xFC) === 0xFC ){
+            unicode = (buf[pos] & 0x3) << 42;
+            unicode |= (buf[pos+1] & 0x3F) << 36; 
+            unicode |= (buf[pos+2] & 0x3F) << 30; 
+            unicode |= (buf[pos+3] & 0x3F) << 24; 
+            unicode |= (buf[pos+4] & 0x3F) << 18;
+            unicode |= (buf[pos+5] & 0x3F) << 12;
+            unicode |= (buf[pos+6] & 0x3F) << 6;
+            unicode |= (buf[pos+6] & 0x3F);
+            str+= String.fromCharCode(unicode) ;
+            pos += 8;
+          }
+          else if ((flag &0xFC) === 0xFC ){
+            unicode = (buf[pos] & 0x3) << 36;
+            unicode |= (buf[pos+1] & 0x3F) << 30; 
+            unicode |= (buf[pos+2] & 0x3F) << 24; 
+            unicode |= (buf[pos+3] & 0x3F) << 18; 
+            unicode |= (buf[pos+4] & 0x3F) << 12;
+            unicode |= (buf[pos+5] & 0x3F) << 6;
+            unicode |= (buf[pos+6] & 0x3F);
+            str+= String.fromCharCode(unicode) ;
+            pos += 7;
           }
           else if ((flag &0xFC) === 0xFC ){
             unicode = (buf[pos] & 0x3) << 30;
@@ -32,8 +89,8 @@ class Connection {
             unicode |= (buf[pos+5] & 0x3F);
             str+= String.fromCharCode(unicode) ;
             pos += 6;
-      
-          }else if ((flag &0xF8) === 0xF8 ){
+          }
+          else if ((flag &0xF8) === 0xF8 ){
             unicode = (buf[pos] & 0x7) << 24;
             unicode |= (buf[pos+1] & 0x3F) << 18; 
             unicode |= (buf[pos+2] & 0x3F) << 12; 
@@ -52,7 +109,6 @@ class Connection {
             pos += 4;
       
           }
-      
           else if ((flag &0xE0) === 0xE0 ){
             unicode = (buf[pos] & 0x1F) << 12;;
             unicode |= (buf[pos+1] & 0x3F) << 6;
@@ -77,51 +133,58 @@ class Connection {
     }
 
     static writeServerData(buf) {
-        var data = new Uint8Array(buf);
-        var str = Connection.binayUtf8ToString(data, 0);
-      
-        var lines = str.split('\n');
+        var gameData = Connection.binayUtf8ToString(new Uint8Array(buf), 0);
+        
+        for(var i=0; i<Connection.ansi.length; i++) {
+          if (gameData.indexOf(Connection.ansi[i]) >= 0) {
+            gameData = gameData.replace(new RegExp(Connection.ansi[i], "g"),"█");
+          }
+        }
+        var lines = gameData.toString().split('\n');
         
         if (window.lastLine != undefined) {
           lines[0] = window.lastLine + lines[0];    
         }
         var lastLine = lines.pop();
-        if (TWLine.isPrompt(lastLine)) {
-          lines.push(lastLine);
+        var promptLine = (TWLine.isPrompt(lastLine));
+        if (promptLine != "") {
+          lines.push(promptLine);
           window.lastLine = "";
         }
         else{
           window.lastLine = lastLine;
         }
       
+        var output = "";
         for(var i=0; i<lines.length; i++) {
-          let line = TWLine.process(lines[i]);
+          let line = lines[i];
           //default class of tw-line
           var className = "tw-line";
-          if (TWLine.isPrompt(line)) {
+         
+          if (TWLine.isPrompt(line) != "") {
             className = "tw-prompt";
-      
-            //When ansi is clearing the line, place the last known prompt down
-            if((line+TWLine.END_OF_LINE).indexOf((TWLine.CLEAR_LINE+TWLine.END_OF_LINE)) >= 0) {
-              line = window.lastPrompt;
-            }
+            line = window.lastPrompt;
           }
       
-          //The main heavy lifting of creating the HTML from the ansi received from the server
-          line = ansi_up.ansi_to_html(line);
-          
+          //console.log("++" + line + "++")
+          //console.log("[[" + window.lastPrompt + "]]")
           //If blank, mark it as a blank line - line height slightly smaller in view
           if (line.trim() == "") {
             className = "blank-line";
           }
-      
-          //If line only has one character, assume it's input from the user.  Curremtly hiding that.
-          if (line.trim().length == 1) {
-            className = "input-line";
+          else {
+            if (line.trim().length == 1) {
+              className = "input-line";
+            }  
           }
-          this.writeToScreen("<tr class='"+className+"'><td>" + line + "</td></tr>");
+          //The main heavy lifting of creating the HTML from the ansi received from the server
+          line = ansi_up.ansi_to_html(line);
+          output += "<tr class='"+className+"'><td>" + line + "</td></tr>"
         }
-    }      
+        this.writeToScreen(output);
+      }
+      
+
     
     send(str) {
         if(this.sock) this.sock.emit('stream', str);
@@ -130,16 +193,12 @@ class Connection {
     static writeToScreen(str) {
         var logLines = $(Viewscreen.GAME_LOG).find('tr:visible').size();
         if (logLines > Viewscreen.maxLogLines) {
-            $(Viewscreen.GAME_LOG).find('tr:visible:lt(' + (maxLogLines-80) + ')').addClass('backScroll').hide();
+            $(Viewscreen.GAME_LOG).find('tr:visible:lt(' + (Viewscreen.maxLogLines-80) + ')').addClass('backScroll').hide();
             //No value that I see for storing old prompt lines
             $(Viewscreen.GAME_LOG).find('tr.twprompt:hidden').remove();
-            $(Viewscreen.VIEWSCREEN).scrollTop(out.prop("scrollHeight"));
+            $(Viewscreen.VIEWSCREEN).scrollTop($(Viewscreen.GAME_LOG).prop("scrollHeight"));
         }
         $(Viewscreen.GAME_LOG).append(str);
         $(Viewscreen.VIEWSCREEN).scrollTop($(Viewscreen.VIEWSCREEN).prop("scrollHeight"));
-    }
-
-    static ab2str(buf) {
-        return String.fromCharCode.apply(null, new Uint16Array(buf));
     }
 }
