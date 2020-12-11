@@ -215,7 +215,7 @@ class Connection {
         if (logLines > Viewscreen.maxLogLines) {
             $(Viewscreen.GAME_LOG).find('tr:visible:lt(' + (Viewscreen.maxLogLines-80) + ')').addClass('backScroll').hide();
             //No value that I see for storing old prompt lines
-            $(Viewscreen.GAME_LOG).find('tr.twprompt:hidden').remove();
+            $(Viewscreen.GAME_LOG).find('tr.tw-prompt:hidden').remove();
             $(Viewscreen.VIEWSCREEN).scrollTop($(Viewscreen.GAME_LOG).prop("scrollHeight"));
         }
         $(Viewscreen.GAME_LOG).append(str);

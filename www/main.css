@@ -44,6 +44,16 @@ body, div#page {
   div#viewscreen .tw-prompt {
     display:none;
   }
+  body.game-log, body.game-log div#page {
+    background-color: #021;
+  }
+  body.game-log .message-error {
+    text-align: center;
+    color: #ffffff;
+    height: 20px;
+    font-size: 20px;
+  }
+
   div#viewscreen .tw-prompt:last-of-type {
     display: block;
   }

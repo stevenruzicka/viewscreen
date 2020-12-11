@@ -54,6 +54,25 @@ $(function() {
       e.preventDefault();
       connection.send("\u0008");
     }
+    if(code == 33) {
+      e.preventDefault();
+      let params = "status=0";
+      let gameLog = window.open("game_log.html", "game-log", params); 
+      if(gameLog) {
+        gameLog.close();
+        gameLog = window.open("game_log.html", "game-log", params); 
+      } 
+      gameLog.focus();
+      gameLog.onload = function() {
+        var html = $("body").html();
+        gameLog.document.body.insertAdjacentHTML('beforeend', html);
+        $(gameLog.document.body).find("tr.backScroll").show();
+        $(gameLog.document.body).find(Viewscreen.VIEWSCREEN).scrollTop(Number.MAX_SAFE_INTEGER);
+        $(gameLog.document.body).find(Viewscreen.VIEWSCREEN).focus();
+      };
+
+      //connection.send(String.fromCharCode(code));
+    }
   });
 
   setTimeout(function(){
