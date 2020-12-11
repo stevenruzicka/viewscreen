@@ -33,7 +33,7 @@ class TWLine {
       var isPrompt = false;
       if ((line+TWLine.END_OF_LINE).indexOf("[---------------------------------------]") >= 0) {
         //remove last prompt for name planets for visual
-        console.log("planet prompt");
+        //console.log("planet prompt");
         window.lastPrompt = line;
         isPrompt = true;
       }
