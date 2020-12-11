@@ -40,13 +40,15 @@ class TWLine {
       if (line == undefined) {
         return "";
       }
+      if (line.trim() == "") {
+        return line;
+      }
       if ((line.trim().length <= 7) && (window.lastPrompt != "")) {
         //For user input like sector numbers
         line = window.lastPrompt + line;
       }
       if (((line.indexOf("[1;33m") >= 0) && (line.toLowerCase().indexOf("?=help") >= 0)) || (isPrompt == true)) {
         window.lastPrompt = line;
-        console.log("prompt is true"+line);
         return line;
       }
 

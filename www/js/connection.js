@@ -134,14 +134,18 @@ class Connection {
 
     static writeServerData(buf) {
         var gameData = Connection.binayUtf8ToString(new Uint8Array(buf), 0);
-        
         for(var i=0; i<Connection.ansi.length; i++) {
           if (gameData.indexOf(Connection.ansi[i]) >= 0) {
             gameData = gameData.replace(new RegExp(Connection.ansi[i], "g"),"█");
           }
         }
+        //Splitting subspace messages from prompt
+        gameData = gameData.replace(new RegExp("\\[K\\[1A", "g"),"\n");
+
+        console.log("+++"+gameData.replace(new RegExp("\n", "g"),"[[NEWLINE]]")+"+++");
+
         var lines = gameData.toString().split('\n');
-        
+
         if (window.lastLine != undefined) {
           lines[0] = window.lastLine + lines[0];    
         }
@@ -156,30 +160,45 @@ class Connection {
         }
       
         var output = "";
+        let last_line_type = "";
         for(var i=0; i<lines.length; i++) {
           let line = lines[i];
+          let skip_this_line = false;
+
+          console.log("[["+line+"]]");
           //default class of tw-line
           var className = "tw-line";
          
-          if (TWLine.isPrompt(line) != "") {
-            className = "tw-prompt";
-            line = window.lastPrompt;
-          }
-      
-          //console.log("++" + line + "++")
-          //console.log("[[" + window.lastPrompt + "]]")
           //If blank, mark it as a blank line - line height slightly smaller in view
-          if (line.trim() == "") {
-            className = "blank-line";
+          if ((line == undefined) || (line.trim() == "")) {
+            if ((last_line_type == "blank-line") || (last_line_type == "tw-prompt")) {
+              skip_this_line = true;
+              console.log("skip this line");
+            } 
+            else {
+              className = "blank-line";
+            }
           }
           else {
-            if (line.trim().length == 1) {
-              className = "input-line";
-            }  
+            if (TWLine.isPrompt(line) != "") {
+              if (i == (lines.length-1)) {
+                className = "tw-prompt";
+                line = window.lastPrompt;
+              } else {
+                skip_this_line = true;
+              }
+            } else {
+              if (line.trim().length == 1) {
+                className = "input-line";
+              }  
+            }
           }
           //The main heavy lifting of creating the HTML from the ansi received from the server
-          line = ansi_up.ansi_to_html(line);
-          output += "<tr class='"+className+"'><td>" + line + "</td></tr>"
+          if (!skip_this_line){
+            line = ansi_up.ansi_to_html(line);
+            last_line_type = className;
+            output += "<tr class='"+className+"'><td>" + line + "</td></tr>";
+          }
         }
         this.writeToScreen(output);
       }
