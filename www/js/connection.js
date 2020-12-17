@@ -133,8 +133,8 @@ class Connection {
        return str;
     }
 
-    static writeServerData(buf) {
-        var gameData = Connection.binayUtf8ToString(new Uint8Array(buf), 0);
+    static writeServerData(output) {
+ /*       var gameData = Connection.binayUtf8ToString(new Uint8Array(buf), 0);
         for(var i=0; i<Connection.ansi.length; i++) {
           if (gameData.indexOf(Connection.ansi[i]) >= 0) {
             gameData = gameData.replace(new RegExp(Connection.ansi[i], "g"),"█");
@@ -142,8 +142,7 @@ class Connection {
         }
         //Splitting subspace messages from prompt
         gameData = gameData.replace(new RegExp("\\[K\\[1A", "g"),"\n[K[1A");
-
-        var lines = gameData.toString().split('\n');
+        var lines = buf.toString().split('\n');
 
         if (window.lastLine != undefined) {
           lines[0] = window.lastLine + lines[0];    
@@ -201,6 +200,7 @@ class Connection {
             output += "<tr class='"+className+"'><td>" + line + "</td></tr>";
           }
         }
+*/
         this.writeToScreen(output);
       }
       

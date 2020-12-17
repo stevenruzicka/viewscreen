@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "bundleDependencies": false,
   "dependencies": {
+    "ansi_up": "^4.0.4",
     "bootstrap": "^4.5.3",
+    "ejs": "^3.1.5",
     "express": "^4.17.1",
     "iconv-lite": "^0.4.24",
     "minimist": "^1.2.5",

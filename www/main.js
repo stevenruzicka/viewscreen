@@ -23,25 +23,25 @@ $(function() {
     if (code == 38) {
       e.preventDefault();
       $(Viewscreen.VIEWSCREEN).focus();  
-      connection.send("\u001b[A");
+      connection.send(Viewscreen.UP);
     }
     //down arrow
     if (code == 40) {
       e.preventDefault();
       $(Viewscreen.VIEWSCREEN).focus();  
-      connection.send("\u001b[B");
+      connection.send(Viewscreen.DOWN);
     }
     //left arrow
     if (code == 37) {
       e.preventDefault();
       $(Viewscreen.VIEWSCREEN).focus();  
-      connection.send("\u001b[D");
+      connection.send(Viewscreen.LEFT);
     }
     //right arrow
     if (code == 39) {
       e.preventDefault();
       $(Viewscreen.VIEWSCREEN).focus();  
-      connection.send("\u001b[C");
+      connection.send(Viewscreen.RIGHT);
     }
     //tab
     if (code == 9) {
@@ -52,7 +52,8 @@ $(function() {
     //backspace
     if (code == 8) {
       e.preventDefault();
-      connection.send("\u0008");
+      //connection.send(Viewscreen.BACKSPACE);
+      connection.send("\b");
     }
     if(code == 33) {
       e.preventDefault();
@@ -64,11 +65,11 @@ $(function() {
       } 
       gameLog.focus();
       gameLog.onload = function() {
-        var html = $("body").html();
-        gameLog.document.body.insertAdjacentHTML('beforeend', html);
-        $(gameLog.document.body).find("tr.backScroll").show();
+        //var html = $("body").html();
+        //gameLog.document.body.insertAdjacentHTML('beforeend', html);
+        //$(gameLog.document.body).find(Viewscreen.BACKSCROLL).show();
         $(gameLog.document.body).find(Viewscreen.VIEWSCREEN).scrollTop(Number.MAX_SAFE_INTEGER);
-        $(gameLog.document.body).find(Viewscreen.VIEWSCREEN).focus();
+        //$(gameLog.document.body).find(Viewscreen.VIEWSCREEN).trigger("click");
       };
 
       //connection.send(String.fromCharCode(code));

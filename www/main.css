@@ -15,12 +15,12 @@ body, div#page {
     border: 1px solid gray; 
   }
   @media screen and (max-device-width: 480px){
-    table.out{
+    .out{
       -webkit-text-size-adjust: none;
     }
   }
   @media screen and (min-width: 100px) {
-    table.out {
+    .out {
         white-space:pre;
         word-wrap: break-word;
         font-family: monospace;
@@ -29,7 +29,7 @@ body, div#page {
     }
   }
   @media screen and (min-width: 700px) {
-    table.out {
+    .out {
       font-size: 12px;
     }
     input#mobile-cmd {
@@ -37,7 +37,7 @@ body, div#page {
     }    
   }
   
-  table.out tr {
+  .out tr {
     display: block;
   }
   
@@ -69,13 +69,17 @@ body, div#page {
     padding: 5px;
   }
 
-  table.out tr.blank-line {
-      line-height: 2px;
-  }
-  table.out tr.tw-line {
+  .out .blank-line {
       line-height: 1vh;
+  }
+  .out .tw-line {
+      line-height: 1.5vh;
       overflow: hidden;
   }
-  table.out tr.input-line {
+  .out .input-line {
       display:none;
+  }
+  .history-frame {
+    width:100%;
+    height:100%;
   }
