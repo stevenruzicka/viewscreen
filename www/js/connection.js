@@ -20,7 +20,7 @@ class Connection {
 
     writeToScreen(str) {
       let VIEWSCREEN = "div#viewscreen";
-      let GAME_LOG = this.VIEWSCREEN+" .out";
+      let GAME_LOG = VIEWSCREEN+" .out";
       let BACKSCROLL = ".backScroll";
       let maxLogLines = 150;
   
