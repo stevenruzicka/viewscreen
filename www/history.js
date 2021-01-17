@@ -1,4 +1,4 @@
-$(window).resize(Viewscreen.adjustLayout);
+$(window).resize(adjustLayout);
 
 $(function() {
   
@@ -14,7 +14,18 @@ $(function() {
   });
 
   setTimeout(function(){
-    Viewscreen.adjustLayout();
+    adjustLayout();
     connection.send('\n');
   },200)
 });
+
+function adjustLayout() {
+  var w = $(window).width(),
+      h = $(window).height();
+
+  $("div#viewscreen").css({
+    width: (w-2) + 'px',
+    height: (h -2) + 'px',
+  });
+}
+
