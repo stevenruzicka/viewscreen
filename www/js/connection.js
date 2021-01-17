@@ -38,7 +38,7 @@ class Connection {
         window.last_line_type = "";
         this.sock = io.connect();
         this.sock.on('stream', function(buf){
-            Connection.writeServerData(buf);
+            Connection.writeToScreen(buf);
         });
         this.sock.on('status', function(str){
             Connection.writeToScreen(str);
@@ -133,92 +133,24 @@ class Connection {
        return str;
     }
 
-    static writeServerData(output) {
- /*       var gameData = Connection.binayUtf8ToString(new Uint8Array(buf), 0);
-        for(var i=0; i<Connection.ansi.length; i++) {
-          if (gameData.indexOf(Connection.ansi[i]) >= 0) {
-            gameData = gameData.replace(new RegExp(Connection.ansi[i], "g"),"█");
-          }
-        }
-        //Splitting subspace messages from prompt
-        gameData = gameData.replace(new RegExp("\\[K\\[1A", "g"),"\n[K[1A");
-        var lines = buf.toString().split('\n');
-
-        if (window.lastLine != undefined) {
-          lines[0] = window.lastLine + lines[0];    
-        }
-        var lastLine = lines.pop();
-        var promptLine = (TWLine.isPrompt(lastLine));
-        if (promptLine != "") {
-          lines.push(promptLine);
-          window.lastLine = "";
-        }
-        else{
-          window.lastLine = lastLine;
-        }
-      
-        var output = "";
-        for(var i=0; i<lines.length; i++) {
-          let line = lines[i];
-          let skip_this_line = false;
-
-          //default class of tw-line
-          var className = "tw-line";
-         
-          //If blank, mark it as a blank line - line height slightly smaller in view
-          if ((line == undefined) || (line.trim() == "")) {
-            if ((window.last_line_type == "blank-line") || (window.last_line_type == "tw-prompt") || (window.last_line_type == "tw-comms")) {
-              skip_this_line = true;
-            } 
-            else {
-              className = "blank-line";
-            }
-          }
-          else {
-            if (line.indexOf("[K[1A") >= 0) {
-              className = "tw-comms";
-            }
-            else {
-              if (TWLine.isPrompt(line) != "") {
-                if (i == (lines.length-1)) {
-                  className = "tw-prompt";
-                  line = window.lastPrompt;
-                } else {
-                  skip_this_line = true;
-                }
-              } else {
-                if (line.trim().length == 1) {
-                  className = "input-line";
-                }  
-              }  
-            }
-          }
-          //The main heavy lifting of creating the HTML from the ansi received from the server
-          if (!skip_this_line){
-            line = ansi_up.ansi_to_html(line);
-            window.last_line_type = className;
-            output += "<tr class='"+className+"'><td>" + line + "</td></tr>";
-          }
-        }
-*/
-        this.writeToScreen(output);
-      }
-      
-
     
     send(str) {
         if(this.sock) this.sock.emit('stream', str);
     }
 
     static writeToScreen(str) {
-        var logLines = $(Viewscreen.GAME_LOG).find('tr:visible').size();
+        var logLines = $(Viewscreen.GAME_LOG).find('div:visible').size();
         if (logLines > Viewscreen.maxLogLines) {
-            $(Viewscreen.GAME_LOG).find('tr:visible:lt(' + (Viewscreen.maxLogLines-80) + ')').addClass('backScroll').hide();
+            $(Viewscreen.GAME_LOG).find('div:visible:lt(' + (Viewscreen.maxLogLines-80) + ')').addClass('backScroll').hide();
             //No value that I see for storing old prompt lines
-            $(Viewscreen.GAME_LOG).find('tr.tw-prompt:hidden').remove();
             $(Viewscreen.VIEWSCREEN).scrollTop($(Viewscreen.GAME_LOG).prop("scrollHeight"));
         }
         $(Viewscreen.GAME_LOG).append(str);
         $(Viewscreen.VIEWSCREEN).scrollTop($(Viewscreen.VIEWSCREEN).prop("scrollHeight"));
-    }
+        $(Viewscreen.GAME_LOG).find('div.tw-prompt:hidden').remove();
+        $('.tw-line:visible').each(function(){ 
+          if( $(this).text().trim() === '' )
+              $(this).remove(); // if it is empty, it removes it
+        });
+}
 }

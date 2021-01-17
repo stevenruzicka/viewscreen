@@ -82,9 +82,9 @@ var net = require('net'),
 
 
       //Handling the input prompts and backspaces
-      console.log("outside length of one: ["+line.length+"]["+line+"]");
+     // console.log("outside length of one: ["+line.length+"]["+line+"]");
       if (((line.length == 1) || (currentPrompt == "[---------------------------------------]") && (line.length == 6)) || (line.indexOf(BACKSPACE) >= 0)) {
-        console.log("inside length of one: ["+line+"]");
+        //console.log("inside length of one: ["+line+"]");
         if ((line == "\b") || (line.indexOf(BACKSPACE) >= 0)) {
           if (currentPrompt == "[---------------------------------------]") {
             lastPrompt = lastPrompt.slice(0, -6);
@@ -353,8 +353,8 @@ WebTelnetProxy.prototype = {
 
   connectTelnet: function(webSock) {
     var proxy = this;
-    const fs = require('fs');
-    var stream = fs.createWriteStream("www/history.html", {flags:'a'});
+//    const fs = require('fs');
+//    var stream = fs.createWriteStream("www/history.html", {flags:'a'});
 
     var telnet = net.connect( proxy.port, proxy.host, function() {
       if(proxy.logTraffic) console.log('telnet connected');
@@ -456,7 +456,7 @@ WebTelnetProxy.prototype = {
           }
         }
         peerSock.emit('stream', output);
-        stream.write(output);
+  //      stream.write(output);
       }
     });
     telnet.on('error', function(){
