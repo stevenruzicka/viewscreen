@@ -6,10 +6,10 @@ class Connection {
         window.last_line_type = "";
         this.sock = io.connect();
         this.sock.on('stream', function(buf){
-            Connection.writeToScreen(buf);
+          writeToScreen(buf);
         });
         this.sock.on('status', function(str){
-            Connection.writeToScreen(str);
+          writeToScreen(str);
         });
     }
 
