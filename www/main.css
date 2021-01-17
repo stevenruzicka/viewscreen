@@ -14,29 +14,7 @@ body, div#page {
     line-height: 15px;
     border: 1px solid gray; 
   }
-  @media screen and (max-device-width: 480px){
-    .out{
-      -webkit-text-size-adjust: none;
-    }
-  }
-  @media screen and (min-width: 100px) {
-    .out {
-        white-space:pre;
-        word-wrap: break-word;
-        font-family: monospace;
-        font-size: 8px;
-        color: rgb(148, 132, 132);
-    }
-  }
-  @media screen and (min-width: 700px) {
-    .out {
-      font-size: 12px;
-    }
-    input#mobile-cmd {
-        display: none;
-    }    
-  }
-  
+ 
   .out tr {
     display: block;
   }
