@@ -463,7 +463,7 @@ WebTelnetProxy.prototype = {
     });
     telnet.on('close', function(){
       if(proxy.logTraffic) console.log('telnet disconnected');
-      stream.end();
+      //stream.end();
       webSock.emit('status', 'Telnet disconnected.\n');
     });
     telnet.on('end', function(){
