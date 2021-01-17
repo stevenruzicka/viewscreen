@@ -468,7 +468,7 @@ WebTelnetProxy.prototype = {
     });
     telnet.on('end', function(){
       var peerSock = telnet.peerSock;
-      stream.end();
+      //stream.end();
       if(peerSock) {
         peerSock.peerSock = null;
         telnet.peerSock = null;

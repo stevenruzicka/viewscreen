@@ -1,4 +1,11 @@
-$(window).resize(Viewscreen.adjustLayout);
+$(window).resize(adjustLayout);
+
+let VIEWSCREEN = "div#viewscreen";
+let UP = "\u001b[A";
+let DOWN = "\u001b[B";
+let RIGHT = "\u001b[C";
+let LEFT = "\u001b[D";
+let BACKSPACE = "\u0008";
 
 $(function() {
   let connection = new Connection();
@@ -10,7 +17,7 @@ $(function() {
     e.preventDefault();
     var code = (e.keyCode ? e.keyCode : e.which);
     connection.send(String.fromCharCode(code));
-    var el = $(Viewscreen.VIEWSCREEN); 
+    var el = $(VIEWSCREEN); 
    
   });
 
@@ -22,37 +29,37 @@ $(function() {
     //up arrow
     if (code == 38) {
       e.preventDefault();
-      $(Viewscreen.VIEWSCREEN).focus();  
-      connection.send(Viewscreen.UP);
+      $(VIEWSCREEN).focus();  
+      connection.send(UP);
     }
     //down arrow
     if (code == 40) {
       e.preventDefault();
-      $(Viewscreen.VIEWSCREEN).focus();  
-      connection.send(Viewscreen.DOWN);
+      $(VIEWSCREEN).focus();  
+      connection.send(DOWN);
     }
     //left arrow
     if (code == 37) {
       e.preventDefault();
-      $(Viewscreen.VIEWSCREEN).focus();  
-      connection.send(Viewscreen.LEFT);
+      $(VIEWSCREEN).focus();  
+      connection.send(LEFT);
     }
     //right arrow
     if (code == 39) {
       e.preventDefault();
-      $(Viewscreen.VIEWSCREEN).focus();  
-      connection.send(Viewscreen.RIGHT);
+      $(VIEWSCREEN).focus();  
+      connection.send(RIGHT);
     }
     //tab
     if (code == 9) {
       e.preventDefault();
-      $(Viewscreen.VIEWSCREEN).focus();  
+      $(VIEWSCREEN).focus();  
       connection.send(String.fromCharCode(code));
     }
     //backspace
     if (code == 8) {
       e.preventDefault();
-      //connection.send(Viewscreen.BACKSPACE);
+      //connection.send(BACKSPACE);
       connection.send("\b");
     }
     if(code == 33) {
@@ -68,7 +75,7 @@ $(function() {
         //var html = $("body").html();
         //gameLog.document.body.insertAdjacentHTML('beforeend', html);
         //$(gameLog.document.body).find(Viewscreen.BACKSCROLL).show();
-        $(gameLog.document.body).find(Viewscreen.VIEWSCREEN).scrollTop(Number.MAX_SAFE_INTEGER);
+        $(gameLog.document.body).find(VIEWSCREEN).scrollTop(Number.MAX_SAFE_INTEGER);
         //$(gameLog.document.body).find(Viewscreen.VIEWSCREEN).trigger("click");
       };
 
@@ -77,8 +84,18 @@ $(function() {
   });
 
   setTimeout(function(){
-    Viewscreen.adjustLayout();
+    adjustLayout();
     connection.send('\n');
   },200)
 
 });
+
+function adjustLayout() {
+  var w = $(window).width(),
+      h = $(window).height();
+
+  $(VIEWSCREEN).css({
+    width: (w-2) + 'px',
+    height: (h -2) + 'px',
+  });
+}
