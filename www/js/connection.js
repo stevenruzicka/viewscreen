@@ -5,11 +5,12 @@ class Connection {
         // websocket
         window.last_line_type = "";
         this.sock = io.connect();
+        let parent = this;
         this.sock.on('stream', function(buf){
-          this.writeToScreen(buf);
+          parent.writeToScreen(buf);
         });
         this.sock.on('status', function(str){
-          this.writeToScreen(str);
+          parent.writeToScreen(str);
         });
     }
 
